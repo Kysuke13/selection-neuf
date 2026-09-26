@@ -16,3 +16,4 @@ body{font-size:18px;line-height:1.6}.brand{font-family:var(--font-serif),Georgia
 .skip-link:focus{transform:none}
 .not-found{min-height:50vh}
 .not-found h1{font-size:clamp(40px,5vw,64px);margin-bottom:28px}
+@media(max-width:760px){.hero{flex-direction:column-reverse}}
