@@ -1,0 +1,2 @@
+document.querySelectorAll('[data-type]').forEach(link => link.addEventListener('click', () => { document.getElementById('typologie').value = link.dataset.type; }));
+document.getElementById('lead-form').addEventListener('submit', event => { event.preventDefault(); const status = document.getElementById('form-status'); status.hidden = false; status.textContent = 'Votre demande est prête. Ceci est une démonstration : aucune donnée n’a été envoyée. Sur la version en ligne, elle sera transmise à votre conseiller Sélection Neuf.'; });
