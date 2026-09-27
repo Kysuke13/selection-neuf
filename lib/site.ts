@@ -138,7 +138,7 @@ export function buildJsonLd() {
         name: SITE_NAME,
         url: SITE_URL,
         slogan: "L’immobilier neuf, bien choisi.",
-        image: `${SITE_URL}/logo-selection-neuf.svg`,
+        image: `${SITE_URL}/logo-selection-neuf.png`,
         areaServed: {
           "@type": "City",
           name: "Montpellier",

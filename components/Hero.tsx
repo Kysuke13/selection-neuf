@@ -18,7 +18,16 @@ export function Hero() {
           Votre appartement neuf, du 2 au 4 pièces, <br />
           au cœur d’un parc arboré de 5 000 m².
         </p>
-        <p className="address">⌖ &nbsp; Route de Lavérune, Montpellier</p>
+        <p className="address">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path
+              fill="currentColor"
+              fillRule="evenodd"
+              d="M10 1.4a6.2 6.2 0 0 0-6.2 6.2c0 4.55 6.2 10.9 6.2 10.9s6.2-6.35 6.2-10.9A6.2 6.2 0 0 0 10 1.4Zm0 3.7a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Z"
+            />
+          </svg>
+          Route de Lavérune, Montpellier
+        </p>
         <div className="hero-price">
           <span>À partir de</span>
           <div>
@@ -39,7 +48,7 @@ export function Hero() {
           fill
           priority
           unoptimized
-          sizes="(max-width: 760px) 100vw, 59vw"
+          sizes="(max-width: 760px) 100vw, 67vw"
         />
         <div className="offer">
           OFFRE DU MOMENT

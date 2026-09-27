@@ -28,7 +28,7 @@ export function MapSection() {
           width={966}
           height={432}
           unoptimized
-          sizes="(max-width: 760px) 100vw, 90vw"
+          sizes="(max-width: 760px) 100vw, 1000px"
           style={{ width: "100%", height: "auto" }}
         />
       </a>
