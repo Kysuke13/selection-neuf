@@ -1,5 +1,3 @@
-import { OFFICIAL_PROGRAM_URL } from "@/lib/site";
-
 export function Footer() {
   return (
     <footer>
@@ -23,12 +21,6 @@ export function Footer() {
           prévisionnelle dès le 4e trimestre 2027. Actabilité immédiate annoncée. Dispositifs
           mentionnés par le promoteur : PTZ, TVA réduite, Jeanbrun, LMNP, Patrimonial et LLI, selon
           éligibilité.
-        </p>
-        <p>
-          Visuels d’ambiance non contractuels © Kaufman &amp; Broad. Informations issues du{" "}
-          <a href={OFFICIAL_PROGRAM_URL} target="_blank" rel="noopener noreferrer">
-            programme officiel Duo Verde
-          </a>. Maquette Sélection Neuf — formulaire de démonstration.
         </p>
       </div>
     </footer>

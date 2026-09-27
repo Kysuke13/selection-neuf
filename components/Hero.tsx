@@ -39,7 +39,7 @@ export function Hero() {
           fill
           priority
           unoptimized
-          sizes="(max-width: 760px) 100vw, 56vw"
+          sizes="(max-width: 760px) 100vw, 59vw"
         />
         <div className="offer">
           OFFRE DU MOMENT
