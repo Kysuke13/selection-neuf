@@ -6,7 +6,19 @@ import { useTypology } from "@/components/TypologyProvider";
 
 const initialState: LeadState = null;
 
-export function LeadForm() {
+type TypologyOption = { value: string; label: string };
+
+const defaultTypologies: TypologyOption[] = [
+  { value: "T2", label: "T2 — 2 pièces" },
+  { value: "T3", label: "T3 — 3 pièces" },
+  { value: "T4", label: "T4 — 4 pièces" },
+];
+
+export function LeadForm({
+  typologies = defaultTypologies,
+}: {
+  typologies?: readonly TypologyOption[];
+}) {
   const [state, formAction, pending] = useActionState(submitLead, initialState);
   const { typology, selectTypology } = useTypology();
 
@@ -57,9 +69,11 @@ export function LeadForm() {
             onChange={(event) => selectTypology(event.target.value)}
           >
             <option value="">À définir</option>
-            <option value="T2">T2 — 2 pièces</option>
-            <option value="T3">T3 — 3 pièces</option>
-            <option value="T4">T4 — 4 pièces</option>
+            {typologies.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </label>
       </div>
@@ -71,10 +85,15 @@ export function LeadForm() {
         </span>
       </label>
       <button className="button" type="submit" disabled={pending}>
-        Recevoir la plaquette et les plans <span>↗</span>
+        {pending ? "Envoi en cours…" : (<>Recevoir la plaquette et les plans <span>↗</span></>)}
       </button>
-      <p className="form-note">Maquette de démonstration : aucune donnée n’est envoyée.</p>
-      <p id="form-status" role="status" hidden={!state?.message}>
+      <p className="form-note">Vos données sont transmises à votre conseiller Sélection Neuf.</p>
+      <p
+        id="form-status"
+        role="status"
+        data-ok={state?.ok ? "true" : state ? "false" : undefined}
+        hidden={!state?.message}
+      >
         {state?.message}
       </p>
     </form>

@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  async rewrites() {
+    return [{ source: "/duo-verde", destination: "/" }];
+  },
   async headers() {
     return [
       {

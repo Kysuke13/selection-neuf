@@ -1,20 +1,61 @@
 "use server";
 
-export type LeadState = { message: string } | null;
+import { headers } from "next/headers";
+import { getSupabaseClient } from "@/lib/supabase";
+
+export type LeadState = { message: string; ok?: boolean } | null;
 
 export async function submitLead(_previous: LeadState, formData: FormData): Promise<LeadState> {
   const prenom = String(formData.get("prenom") ?? "").trim();
   const nom = String(formData.get("nom") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const telephone = String(formData.get("telephone") ?? "").trim();
+  const projet = String(formData.get("projet") ?? "").trim() || null;
+  const typologie = String(formData.get("typologie") ?? "").trim() || null;
   const consent = formData.get("consent");
 
   if (!prenom || !nom || !email || telephone.length < 10 || !consent) {
-    return { message: "Merci de renseigner tous les champs obligatoires." };
+    return { message: "Merci de renseigner tous les champs obligatoires.", ok: false };
+  }
+
+  const supabase = getSupabaseClient();
+
+  if (!supabase) {
+    return {
+      message:
+        "Configuration Supabase manquante. Vérifiez le fichier .env.local, puis réessayez.",
+      ok: false,
+    };
+  }
+
+  const headerList = await headers();
+  const userAgent = headerList.get("user-agent");
+  const pageUrl = headerList.get("referer");
+
+  const { error } = await supabase.from("leads").insert({
+    prenom,
+    nom,
+    email,
+    telephone,
+    projet,
+    typologie,
+    consent: Boolean(consent),
+    page_url: pageUrl,
+    user_agent: userAgent,
+  });
+
+  if (error) {
+    console.error("Erreur d'enregistrement du lead Supabase:", error);
+    return {
+      message:
+        "Une erreur est survenue lors de l'envoi. Merci de réessayer dans un instant.",
+      ok: false,
+    };
   }
 
   return {
     message:
-      "Votre demande est prête. Ceci est une démonstration : aucune donnée n’a été envoyée. Sur la version en ligne, elle sera transmise à votre conseiller Sélection Neuf.",
+      "Merci ! Votre demande a bien été enregistrée. Un conseiller Sélection Neuf vous recontactera rapidement.",
+    ok: true,
   };
 }

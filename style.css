@@ -16,3 +16,6 @@ header .brand{margin-left:calc(3.762vw - 5vw)}
 .map-section{background:#fffaf2;padding-bottom:55px}.map-section .section-heading{align-items:flex-end}.map-section h2{max-width:680px}.map-image-link{display:block;width:min(100%,1000px);margin-inline:auto;border:1px solid var(--line);overflow:hidden;border-radius:3px}.map-image-link img{display:block;width:100%;height:auto}.map-link{display:flex;width:fit-content;margin:20px auto 0}.map-image-link:hover{border-color:var(--green)}@media(max-width:760px){.map-section .section-heading>p{margin-top:18px}.map-section h2{font-size:36px}.map-section{padding-bottom:40px}}
 .address{display:flex;align-items:center;gap:7px}
 .address svg{width:20px;height:20px;flex:none;color:#6d9a86}
+#form-status{margin-top:14px;padding:12px 14px;border-radius:4px;font-size:15px;line-height:1.45}
+#form-status[data-ok="true"]{background:#e7f2ea;color:#1f5138;border:1px solid #b7d8c3}
+#form-status[data-ok="false"]{background:#fbeae6;color:#8a3320;border:1px solid #e6c1b6}
