@@ -28,7 +28,6 @@ export const metadata: Metadata = {
     "Nouveau Saint-Roch",
     "rue Isabelle Eberhardt",
     "T2 Montpellier",
-    "T3 Montpellier",
     "T4 Montpellier",
     "T5 Montpellier",
   ],
@@ -202,7 +201,7 @@ export default function CanopeaPage() {
                 <h2>À chacun son espace.</h2>
               </div>
               <p>
-                Quatre typologies pour votre projet.
+                Trois typologies pour votre projet.
                 <br />
                 Recevez les plans et les disponibilités.
               </p>

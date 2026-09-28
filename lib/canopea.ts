@@ -29,34 +29,26 @@ export const canopeaApartments = [
   {
     id: "T2",
     pieces: "2 pièces",
-    surfaceLabel: null,
-    surfaceValue: null,
+    surfaceLabel: "37,42",
+    surfaceValue: 37.42,
     priceLabel: "219 000",
     priceValue: 219000,
   },
   {
-    id: "T3",
-    pieces: "3 pièces",
-    surfaceLabel: null,
-    surfaceValue: null,
-    priceLabel: null,
-    priceValue: null,
-  },
-  {
     id: "T4",
     pieces: "4 pièces",
-    surfaceLabel: null,
-    surfaceValue: null,
-    priceLabel: null,
-    priceValue: null,
+    surfaceLabel: "74,48",
+    surfaceValue: 74.48,
+    priceLabel: "449 000",
+    priceValue: 449000,
   },
   {
     id: "T5",
     pieces: "5 pièces",
-    surfaceLabel: null,
-    surfaceValue: null,
-    priceLabel: null,
-    priceValue: null,
+    surfaceLabel: "104,45",
+    surfaceValue: 104.45,
+    priceLabel: "659 000",
+    priceValue: 659000,
   },
 ] as const;
 
@@ -64,7 +56,6 @@ export const canopeaEntryApartment = canopeaApartments[0];
 
 export const canopeaTypologies = [
   { value: "T2", label: "T2 — 2 pièces" },
-  { value: "T3", label: "T3 — 3 pièces" },
   { value: "T4", label: "T4 — 4 pièces" },
   { value: "T5", label: "T5 — 5 pièces" },
 ] as const;
