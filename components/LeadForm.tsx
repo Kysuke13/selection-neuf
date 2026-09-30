@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { submitLead, type LeadState } from "@/app/actions";
 import { useTypology } from "@/components/TypologyProvider";
+import { trackLeadConversion } from "@/lib/gtag";
 
 const initialState: LeadState = null;
 
@@ -21,6 +22,12 @@ export function LeadForm({
 }) {
   const [state, formAction, pending] = useActionState(submitLead, initialState);
   const { typology, selectTypology } = useTypology();
+
+  useEffect(() => {
+    if (state?.ok) {
+      trackLeadConversion();
+    }
+  }, [state?.ok]);
 
   return (
     <form id="lead-form" action={formAction}>
