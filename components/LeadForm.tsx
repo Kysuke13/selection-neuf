@@ -4,6 +4,7 @@ import { useActionState, useEffect } from "react";
 import { submitLead, type LeadState } from "@/app/actions";
 import { useTypology } from "@/components/TypologyProvider";
 import { trackLeadConversion } from "@/lib/gtag";
+import { persistLandingUtm, UTM_KEYS } from "@/lib/utm";
 
 const initialState: LeadState = null;
 
@@ -17,8 +18,10 @@ const defaultTypologies: TypologyOption[] = [
 
 export function LeadForm({
   typologies = defaultTypologies,
+  source = "duo-verde-montpellier",
 }: {
   typologies?: readonly TypologyOption[];
+  source?: string;
 }) {
   const [state, formAction, pending] = useActionState(submitLead, initialState);
   const { typology, selectTypology } = useTypology();
@@ -30,7 +33,18 @@ export function LeadForm({
   }, [state?.ok]);
 
   return (
-    <form id="lead-form" action={formAction}>
+    <form
+      id="lead-form"
+      action={(formData) => {
+        const utm = persistLandingUtm();
+        for (const key of UTM_KEYS) {
+          const value = utm[key];
+          if (value) formData.set(key, value);
+        }
+        formAction(formData);
+      }}
+    >
+      <input type="hidden" name="source" value={source} />
       <h3>Recevez votre dossier</h3>
       <p>Gratuit et sans engagement.</p>
       <div className="form-grid">

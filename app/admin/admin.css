@@ -1,0 +1,384 @@
+.admin-root {
+  --admin-bg: #0f1613;
+  --admin-surface: #ffffff;
+  --admin-ink: #1c2420;
+  --admin-muted: #6d7a73;
+  --admin-line: #e4e9e6;
+  --admin-accent: #4a7063;
+  --admin-accent-soft: #eef3f0;
+  min-height: 100dvh;
+  background: #f4f6f5;
+  color: var(--admin-ink);
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/*
+ * Reset d'isolation : le CSS global du site (globals.css) stylise des
+ * sélecteurs d'éléments nus (header, form, h1, nav, table…) qui contaminent
+ * l'admin. On annule cet héritage à spécificité nulle (:where) pour que les
+ * classes .admin-* ci-dessous restent prioritaires.
+ */
+.admin-root :where(header, nav, main, section, footer, form, table, thead,
+  tbody, tr, th, td, ul, ol, li, h1, h2, h3, h4, p, a, button, input,
+  select, label, .brand, .button) {
+  all: revert;
+}
+
+.admin-root * {
+  box-sizing: border-box;
+}
+
+/* --- Barre supérieure --- */
+.admin-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 2rem;
+  background: #fff;
+  color: var(--admin-ink);
+  border-bottom: 1px solid var(--admin-line);
+}
+
+.admin-topbar .brand {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-size: 1rem;
+  color: var(--admin-ink);
+}
+
+.admin-topbar .brand span {
+  color: var(--admin-accent);
+  font-weight: 500;
+}
+
+.admin-logout {
+  background: #fff;
+  color: var(--admin-ink);
+  border: 1px solid var(--admin-line);
+  border-radius: 8px;
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-logout:hover {
+  background: var(--admin-accent-soft);
+  color: var(--admin-ink);
+}
+
+/* --- Contenu --- */
+.admin-main {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.admin-header {
+  margin-bottom: 1.5rem;
+}
+
+.admin-header h1 {
+  margin: 0 0 0.35rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.admin-header p {
+  margin: 0;
+  color: var(--admin-muted);
+  font-size: 0.95rem;
+}
+
+/* --- Cartes de stats --- */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.9rem;
+  margin: 1.5rem 0;
+}
+
+.admin-stat {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-line);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+
+.admin-stat .value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.admin-stat .label {
+  margin-top: 0.4rem;
+  color: var(--admin-muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* --- Filtres --- */
+.admin-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.admin-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--admin-line);
+  background: var(--admin-surface);
+  color: var(--admin-ink);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.15s ease;
+}
+
+.admin-filter:hover {
+  border-color: var(--admin-accent);
+}
+
+.admin-filter[data-active="true"] {
+  background: var(--admin-accent);
+  border-color: var(--admin-accent);
+  color: #fff;
+}
+
+.admin-filter .count {
+  font-size: 0.72rem;
+  background: var(--admin-accent-soft);
+  color: var(--admin-accent);
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+  font-weight: 600;
+}
+
+.admin-filter[data-active="true"] .count {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.admin-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.admin-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 8px;
+  border: 1px solid var(--admin-accent);
+  background: var(--admin-accent);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.admin-export:hover {
+  filter: brightness(1.05);
+}
+
+/* --- Tableau --- */
+.admin-table-wrap {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-line);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+table.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.admin-table thead th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  background: #fafbfa;
+  border-bottom: 1px solid var(--admin-line);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--admin-muted);
+  white-space: nowrap;
+}
+
+.admin-table tbody td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--admin-line);
+  vertical-align: top;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tbody tr:hover {
+  background: #fafbfa;
+}
+
+.admin-table a {
+  color: var(--admin-accent);
+  text-decoration: none;
+}
+
+.admin-table a:hover {
+  text-decoration: underline;
+}
+
+.lead-name {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--admin-accent-soft);
+  color: var(--admin-accent);
+  white-space: nowrap;
+}
+
+.badge .ville {
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  background: #f0f2f1;
+  font-size: 0.78rem;
+}
+
+.muted {
+  color: var(--admin-muted);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.admin-empty {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--admin-muted);
+}
+
+.admin-error {
+  background: #fdecec;
+  border: 1px solid #f5c2c2;
+  color: #a12626;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-size: 0.9rem;
+}
+
+/* --- Page de connexion --- */
+.admin-login {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: #f4f6f5;
+}
+
+.admin-login-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-line);
+  border-radius: 16px;
+  padding: 2rem 1.75rem;
+  box-shadow: 0 12px 40px rgba(28, 36, 32, 0.08);
+}
+
+.admin-login-card .brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 0.25rem;
+}
+
+.admin-login-card .brand span {
+  color: var(--admin-accent);
+}
+
+.admin-login-card p.sub {
+  margin: 0 0 1.5rem;
+  color: var(--admin-muted);
+  font-size: 0.9rem;
+}
+
+.admin-login-card label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.admin-login-card input {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--admin-line);
+  border-radius: 9px;
+  font: inherit;
+  margin-bottom: 1rem;
+}
+
+.admin-login-card input:focus {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 1px;
+  border-color: var(--admin-accent);
+}
+
+.admin-login-card button {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 9px;
+  background: var(--admin-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-login-card button:hover {
+  filter: brightness(1.05);
+}
+
+.admin-login-card .login-error {
+  background: #fdecec;
+  border: 1px solid #f5c2c2;
+  color: #a12626;
+  border-radius: 9px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Frank_Ruhl_Libre, Source_Sans_3 } from "next/font/google";
 import { GoogleTag } from "@/components/GoogleTag";
 import { Header } from "@/components/Header";
+import { UtmCapture } from "@/components/UtmCapture";
 import { PAGE_DESCRIPTION, PAGE_TITLE, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="fr" className={`${sourceSans.variable} ${frankRuhl.variable}`}>
       <body>
         <GoogleTag />
+        <UtmCapture />
         <a className="skip-link" href="#contenu">
           Aller au contenu
         </a>

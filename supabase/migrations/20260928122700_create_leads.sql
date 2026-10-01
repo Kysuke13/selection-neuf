@@ -15,7 +15,10 @@ create table if not exists public.leads (
   consent      boolean     not null default false,
   source       text        not null default 'duo-verde-montpellier',
   page_url     text,
-  user_agent   text
+  user_agent   text,
+  utm_source   text,
+  utm_campaign text,
+  utm_ad       text
 );
 
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
