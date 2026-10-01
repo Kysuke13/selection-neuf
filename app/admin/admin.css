@@ -179,6 +179,53 @@
   margin-bottom: 0.75rem;
 }
 
+.admin-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 8px;
+  border: 1px solid var(--admin-line);
+  background: var(--admin-surface);
+  color: var(--admin-ink);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.admin-refresh svg {
+  width: 14px;
+  height: 14px;
+}
+
+.admin-refresh svg[data-spinning="true"] {
+  animation: admin-spin 0.7s linear infinite;
+}
+
+.admin-refresh:hover:not(:disabled) {
+  background: var(--admin-accent-soft);
+  border-color: var(--admin-accent);
+}
+
+.admin-refresh:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+@keyframes admin-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .admin-export {
   display: inline-flex;
   align-items: center;

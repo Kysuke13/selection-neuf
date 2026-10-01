@@ -8,6 +8,7 @@ import {
   type Lead,
 } from "@/lib/admin";
 import { logoutAction } from "./actions";
+import { RefreshButton } from "./RefreshButton";
 import "./admin.css";
 
 export const dynamic = "force-dynamic";
@@ -52,6 +53,9 @@ export default async function AdminPage({
           </div>
           <div className="admin-error">
             Impossible de charger les leads : {result.error}
+          </div>
+          <div className="admin-toolbar">
+            <RefreshButton />
           </div>
         </main>
       </div>
@@ -127,9 +131,12 @@ export default async function AdminPage({
             {leads.length} résultat{leads.length > 1 ? "s" : ""}
             {activeSource ? ` · ${programmeLabel(activeSource).label}` : ""}
           </div>
-          <a className="admin-export" href={exportHref}>
-            Exporter en CSV
-          </a>
+          <div className="admin-toolbar-actions">
+            <RefreshButton />
+            <a className="admin-export" href={exportHref}>
+              Exporter en CSV
+            </a>
+          </div>
         </div>
 
         {leads.length === 0 ? (
