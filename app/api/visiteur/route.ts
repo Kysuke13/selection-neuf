@@ -30,6 +30,38 @@ function getClientIp(request: NextRequest): string | null {
   return null;
 }
 
+type GeoResult = {
+  geo_country: string | null;
+  geo_region: string | null;
+  geo_city: string | null;
+  geo_lat: number | null;
+  geo_lon: number | null;
+};
+
+async function geolocateIp(ip: string): Promise<GeoResult | null> {
+  if (!ip || /^(127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|::1|localhost)/.test(ip)) {
+    return null;
+  }
+  try {
+    const res = await fetch(
+      `http://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,country,regionName,city,lat,lon`,
+      { signal: AbortSignal.timeout(3000) },
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.status !== "success") return null;
+    return {
+      geo_country: data.country ?? null,
+      geo_region: data.regionName ?? null,
+      geo_city: data.city ?? null,
+      geo_lat: typeof data.lat === "number" ? data.lat : null,
+      geo_lon: typeof data.lon === "number" ? data.lon : null,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function POST(request: NextRequest) {
   const supabase = getSupabaseClient();
   if (!supabase) {
@@ -64,14 +96,26 @@ export async function POST(request: NextRequest) {
 
   const { data: existing } = await supabase
     .from("visiteurs")
-    .select("id")
+    .select("id, geo_country")
     .eq("session_id", sessionId)
     .maybeSingle();
 
   if (existing) {
+    const update: Record<string, unknown> = {
+      ...fields,
+      ip,
+      user_agent: userAgent,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (!existing.geo_country && ip) {
+      const geo = await geolocateIp(ip);
+      if (geo) Object.assign(update, geo);
+    }
+
     const { error } = await supabase
       .from("visiteurs")
-      .update({ ...fields, ip, user_agent: userAgent, updated_at: new Date().toISOString() })
+      .update(update)
       .eq("session_id", sessionId);
 
     if (error) {
@@ -79,11 +123,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "update_failed" }, { status: 500 });
     }
   } else {
+    const geo = ip ? await geolocateIp(ip) : null;
+
     const { error } = await supabase.from("visiteurs").insert({
       session_id: sessionId,
       ip,
       user_agent: userAgent,
       ...fields,
+      ...(geo ?? {}),
     });
 
     if (error) {

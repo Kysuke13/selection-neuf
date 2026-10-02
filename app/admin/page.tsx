@@ -178,8 +178,18 @@ export default async function AdminPage({
 function Topbar() {
   return (
     <header className="admin-topbar">
-      <div className="brand">
-        sélection neuf <span>· admin</span>
+      <div className="admin-topbar-left">
+        <div className="brand">
+          sélection neuf <span>· admin</span>
+        </div>
+        <nav className="admin-nav">
+          <a href="/admin" className="admin-nav-link" data-active="true">
+            Leads
+          </a>
+          <a href="/admin/visiteurs" className="admin-nav-link">
+            Visiteurs
+          </a>
+        </nav>
       </div>
       <form action={logoutAction}>
         <button className="admin-logout" type="submit">

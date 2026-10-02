@@ -42,6 +42,12 @@
   border-bottom: 1px solid var(--admin-line);
 }
 
+.admin-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .admin-topbar .brand {
   margin: 0;
   font-weight: 700;
@@ -53,6 +59,32 @@
 .admin-topbar .brand span {
   color: var(--admin-accent);
   font-weight: 500;
+}
+
+.admin-nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.admin-nav-link {
+  padding: 0.35rem 0.75rem;
+  border-radius: 7px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--admin-muted);
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-nav-link:hover {
+  background: var(--admin-accent-soft);
+  color: var(--admin-ink);
+}
+
+.admin-nav-link[data-active="true"] {
+  background: var(--admin-accent);
+  color: #fff;
+  font-weight: 600;
 }
 
 .admin-logout {
@@ -428,4 +460,31 @@ table.admin-table {
   padding: 0.6rem 0.8rem;
   font-size: 0.85rem;
   margin-bottom: 1rem;
+}
+
+/* --- Chip variants (visiteurs) --- */
+.chip-complete {
+  background: #e1f5e8;
+  color: #2d6a3f;
+}
+
+.chip-partial {
+  background: #fef3e0;
+  color: #9a6c2e;
+}
+
+/* --- Géolocalisation --- */
+.geo-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.geo-country {
+  font-size: 0.72rem;
+  color: var(--admin-muted);
+  background: #f0f2f1;
+  border-radius: 4px;
+  padding: 0.05rem 0.35rem;
 }

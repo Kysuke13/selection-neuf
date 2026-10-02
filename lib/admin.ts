@@ -114,6 +114,57 @@ export function programmeLabel(source: string | null): { label: string; ville: s
   return { label: source ?? "—", ville: "" };
 }
 
+export type Visiteur = {
+  id: string;
+  session_id: string;
+  ip: string | null;
+  created_at: string;
+  updated_at: string;
+  prenom: string | null;
+  nom: string | null;
+  email: string | null;
+  telephone: string | null;
+  projet: string | null;
+  typologie: string | null;
+  consent: boolean | null;
+  source: string | null;
+  page_url: string | null;
+  user_agent: string | null;
+  utm_source: string | null;
+  utm_campaign: string | null;
+  utm_ad: string | null;
+  geo_country: string | null;
+  geo_region: string | null;
+  geo_city: string | null;
+  geo_lat: number | null;
+  geo_lon: number | null;
+};
+
+export type FetchVisiteursResult =
+  | { ok: true; visiteurs: Visiteur[] }
+  | { ok: false; error: string };
+
+export async function fetchVisiteurs(): Promise<FetchVisiteursResult> {
+  const supabase = getAdminSupabaseClient();
+  if (!supabase) {
+    return {
+      ok: false,
+      error:
+        "Clé Supabase service (SUPABASE_SECRET_KEY) manquante. Renseignez-la dans .env.local.",
+    };
+  }
+
+  const { data, error } = await supabase
+    .from("visiteurs")
+    .select("*")
+    .order("updated_at", { ascending: false });
+
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+  return { ok: true, visiteurs: (data ?? []) as Visiteur[] };
+}
+
 export type FetchLeadsResult =
   | { ok: true; leads: Lead[] }
   | { ok: false; error: string };
