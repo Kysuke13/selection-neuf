@@ -16,9 +16,13 @@ export function Facts() {
         <strong>Un parc de 5 000 m²</strong>
       </div>
       <div>
-        <span>04 / VOTRE ACQUISITION</span>
-        <strong>
+        <span>04 / LES AVANTAGES</span>
+        <strong className="facts-points">
           TVA réduite à 5,5 %<sup>**</sup>
+          <br />
+          Éligible PTZ
+          <br />
+          Jeanbrun
         </strong>
       </div>
     </section>

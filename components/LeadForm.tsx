@@ -34,7 +34,7 @@ export function LeadForm({
 
   return (
     <form
-      id="lead-form"
+      id="contact"
       action={(formData) => {
         const utm = persistLandingUtm();
         for (const key of UTM_KEYS) {
@@ -99,10 +99,9 @@ export function LeadForm({
         </label>
       </div>
       <label className="consent">
-        <input type="checkbox" required name="consent" />
+        <input type="checkbox" required name="consent" defaultChecked />
         <span>
-          J’accepte d’être contacté(e) par Sélection Neuf au sujet de ma demande de documentation et
-          de mon projet immobilier. *
+          J’accepte d’être contacté(e) par Sélection Neuf au sujet de ma demande
         </span>
       </label>
       <button className="button" type="submit" disabled={pending}>

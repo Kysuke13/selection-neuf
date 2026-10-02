@@ -15,10 +15,10 @@ export default function HomePage() {
     <>
       <JsonLd />
       <main id="contenu">
-        <Hero />
-        <Facts />
-        <Residence />
         <TypologyProvider>
+          <Hero />
+          <Facts />
+          <Residence />
           <Apartments />
           <Location />
           <Contact />

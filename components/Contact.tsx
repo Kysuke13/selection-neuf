@@ -1,4 +1,6 @@
-import { LeadForm } from "@/components/LeadForm";
+function dossierDe(program: string) {
+  return /^[aeiouyàâäéèêëîïôöùûüh]/i.test(program) ? `d’${program}` : `de ${program}`;
+}
 
 const documents = [
   "La plaquette de la résidence",
@@ -7,9 +9,17 @@ const documents = [
   "Un échange avec un conseiller",
 ];
 
-export function Contact() {
+export function Contact({
+  program = "Duo Verde",
+  items = documents,
+  cta = "Recevoir la plaquette et les plans",
+}: {
+  program?: string;
+  items?: readonly string[];
+  cta?: string;
+}) {
   return (
-    <section className="contact section" id="contact">
+    <section className="contact section">
       <div className="contact-copy">
         <div className="eyebrow">VOTRE PROJET COMMENCE ICI</div>
         <h2>
@@ -17,9 +27,9 @@ export function Contact() {
           <br />
           adresse était ici ?
         </h2>
-        <p>Recevez le dossier de Duo Verde et échangez avec un conseiller sur votre projet.</p>
+        <p>Recevez le dossier {dossierDe(program)} et échangez avec un conseiller sur votre projet.</p>
         <ul>
-          {documents.map((item, index) => (
+          {items.map((item, index) => (
             <li key={item}>
               <span>{String(index + 1).padStart(2, "0")}</span> {item}
             </li>
@@ -30,7 +40,13 @@ export function Contact() {
           <span>Des lieux de vie. Votre projet.</span>
         </div>
       </div>
-      <LeadForm />
+      <div className="contact-card">
+        <h3>Recevez votre dossier</h3>
+        <p>Gratuit et sans engagement.</p>
+        <a className="button" href="#contact">
+          {cta} <span>↗</span>
+        </a>
+      </div>
     </section>
   );
 }

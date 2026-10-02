@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { Contact } from "@/components/Contact";
 import { LeadForm } from "@/components/LeadForm";
+import { MobileCta } from "@/components/MobileCta";
 import { PlanLink } from "@/components/PlanLink";
 import { TypologyProvider } from "@/components/TypologyProvider";
 import {
@@ -49,13 +51,6 @@ export const metadata: Metadata = {
   },
 };
 
-const documents = [
-  "La plaquette de la résidence",
-  "Les plans des appartements",
-  "Les prix et disponibilités à jour",
-  "Un échange avec un conseiller",
-];
-
 function CanopeaJsonLd() {
   return (
     <script
@@ -72,43 +67,9 @@ export default function CanopeaPage() {
     <>
       <CanopeaJsonLd />
       <main id="contenu">
-        <section className="hero">
-          <div className="hero-copy">
-            <div className="eyebrow">NOTRE SÉLECTION À MONTPELLIER</div>
-            <div className="status">
-              <i aria-hidden="true" /> Travaux en cours <span>•</span>{" "}
-              <time dateTime="2028-04">Livraison 2e trimestre 2028</time>
-            </div>
-            <h1>
-              Canopea
-              <span>La ville, en pleine canopée.</span>
-            </h1>
-            <p className="hero-description">
-              Votre appartement neuf, du 2 au 5 pièces, <br />
-              en bordure d’un parc arboré, quartier Nouveau Saint-Roch.
-            </p>
-            <p className="address">
-              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                <path
-                  fill="currentColor"
-                  fillRule="evenodd"
-                  d="M10 1.4a6.2 6.2 0 0 0-6.2 6.2c0 4.55 6.2 10.9 6.2 10.9s6.2-6.35 6.2-10.9A6.2 6.2 0 0 0 10 1.4Zm0 3.7a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Z"
-                />
-              </svg>
-              Rue Isabelle Eberhardt, Montpellier
-            </p>
-            <div className="hero-price">
-              <span>À partir de</span>
-              <div>
-                {canopeaEntryApartment.priceLabel} €<sup>*</sup>
-              </div>
-              <small>TVA 20 % · Éligible PTZ, BRS et Jeanbrun</small>
-            </div>
-            <a className="button" href="#contact">
-              Recevoir la plaquette et les plans <span>↗</span>
-            </a>
-            <p className="quiet">Sans engagement · Un conseiller à votre écoute</p>
-          </div>
+        <TypologyProvider>
+        <section className="hero" aria-label="Demande de documentation Canopea">
+          <LeadForm typologies={canopeaTypologies} source="canopea-montpellier" />
           <div className="hero-image">
             <Image
               src="/canopea/vue-drone-parc_canopea.jpg"
@@ -125,8 +86,17 @@ export default function CanopeaPage() {
                 Livraison 2<sup>e</sup> trimestre 2028
               </span>
             </div>
-            <div className="image-label">
-              CANOPEA <span>MONTPELLIER · 34</span>
+            <div className="photo-vignettes">
+              <div className="photo-vignettes-id">
+                <h1 className="vignette vignette-name">Canopea</h1>
+                <p className="vignette vignette-place">Montpellier · 34</p>
+              </div>
+              <p className="vignette vignette-price">
+                <span>À partir de</span>
+                <strong>
+                  {canopeaEntryApartment.priceLabel} €<sup>*</sup>
+                </strong>
+              </p>
             </div>
           </div>
         </section>
@@ -147,8 +117,14 @@ export default function CanopeaPage() {
             <strong>En bordure de parc</strong>
           </div>
           <div>
-            <span>04 / LES LABELS</span>
-            <strong>NF Habitat · RE2020</strong>
+            <span>04 / LES AVANTAGES</span>
+            <strong className="facts-points">
+              NF Habitat · RE2020
+              <br />
+              Éligible PTZ
+              <br />
+              Jeanbrun
+            </strong>
           </div>
         </section>
 
@@ -193,7 +169,6 @@ export default function CanopeaPage() {
           </div>
         </section>
 
-        <TypologyProvider>
           <section className="apartments section" id="appartements">
             <div className="section-heading">
               <div>
@@ -291,29 +266,7 @@ export default function CanopeaPage() {
             </div>
           </section>
 
-          <section className="contact section" id="contact">
-            <div className="contact-copy">
-              <div className="eyebrow">VOTRE PROJET COMMENCE ICI</div>
-              <h2>
-                Et si votre prochaine
-                <br />
-                adresse était ici ?
-              </h2>
-              <p>Recevez le dossier de Canopea et échangez avec un conseiller sur votre projet.</p>
-              <ul>
-                {documents.map((item, index) => (
-                  <li key={item}>
-                    <span>{String(index + 1).padStart(2, "0")}</span> {item}
-                  </li>
-                ))}
-              </ul>
-              <div className="contact-signature">
-                sélection neuf
-                <span>Des lieux de vie. Votre projet.</span>
-              </div>
-            </div>
-            <LeadForm typologies={canopeaTypologies} source="canopea-montpellier" />
-          </section>
+          <Contact program="Canopea" />
 
           <section className="map-section section" id="localisation">
             <div className="section-heading">
@@ -378,14 +331,7 @@ export default function CanopeaPage() {
         </TypologyProvider>
       </main>
 
-      <div className="mobile-cta">
-        <span>
-          Dès <strong>{canopeaEntryApartment.priceLabel} €*</strong>
-        </span>
-        <a className="button small" href="#contact">
-          Recevoir les plans ↗
-        </a>
-      </div>
+      <MobileCta priceLabel={canopeaEntryApartment.priceLabel} />
     </>
   );
 }
