@@ -177,6 +177,7 @@ export default async function VisiteursPage({
                   <th>Projet</th>
                   <th>Typologie</th>
                   <th>Localisation</th>
+                  <th>IP</th>
                   <th>Champs remplis</th>
                   <th>Appareil</th>
                   <th>Origine</th>
@@ -281,9 +282,10 @@ function VisiteurRow({ visiteur: v }: { visiteur: Visiteur }) {
             ) : null}
           </span>
         ) : (
-          <span className="muted" title={v.ip ?? undefined}>{v.ip ?? "—"}</span>
+          <span className="muted">—</span>
         )}
       </td>
+      <td className="nowrap muted">{v.ip ?? "—"}</td>
       <td>
         <span className={`chip ${filled === total ? "chip-complete" : filled > 0 ? "chip-partial" : ""}`}>
           {filled}/{total}
