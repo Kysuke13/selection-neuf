@@ -12,7 +12,7 @@ const documents = [
 export function Contact({
   program = "Duo Verde",
   items = documents,
-  cta = "Recevoir la plaquette et les plans",
+  cta = "Valider ma demande",
 }: {
   program?: string;
   items?: readonly string[];
@@ -41,8 +41,8 @@ export function Contact({
         </div>
       </div>
       <div className="contact-card">
-        <h3>Recevez votre dossier</h3>
-        <p>Gratuit et sans engagement.</p>
+        <h3>Recevoir le dossier complet</h3>
+        <p>Recevez la brochure complète avec les prix et les plans</p>
         <a className="button" href="#contact">
           {cta} <span>↗</span>
         </a>

@@ -1,10 +1,15 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useRef, useCallback } from "react";
 import { submitLead, type LeadState } from "@/app/actions";
 import { useTypology } from "@/components/TypologyProvider";
 import { trackLeadConversion } from "@/lib/gtag";
 import { persistLandingUtm, UTM_KEYS } from "@/lib/utm";
+import {
+  getOrCreateSessionId,
+  trackVisitorField,
+  flushVisitorTracking,
+} from "@/lib/visitor-tracking";
 
 const initialState: LeadState = null;
 
@@ -25,6 +30,20 @@ export function LeadForm({
 }) {
   const [state, formAction, pending] = useActionState(submitLead, initialState);
   const { typology, selectTypology } = useTypology();
+  const sessionIdRef = useRef("");
+
+  useEffect(() => {
+    sessionIdRef.current = getOrCreateSessionId();
+    const utm = persistLandingUtm();
+    const meta: Record<string, string | null> = {
+      source,
+      page_url: window.location.href,
+    };
+    for (const key of UTM_KEYS) {
+      meta[key] = utm[key];
+    }
+    trackVisitorField(sessionIdRef.current, "source", source, meta);
+  }, [source]);
 
   useEffect(() => {
     if (state?.ok) {
@@ -32,10 +51,21 @@ export function LeadForm({
     }
   }, [state?.ok]);
 
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, type } = e.target;
+      const value =
+        type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value;
+      trackVisitorField(sessionIdRef.current, name, value);
+    },
+    [],
+  );
+
   return (
     <form
       id="contact"
       action={(formData) => {
+        flushVisitorTracking();
         const utm = persistLandingUtm();
         for (const key of UTM_KEYS) {
           const value = utm[key];
@@ -45,21 +75,21 @@ export function LeadForm({
       }}
     >
       <input type="hidden" name="source" value={source} />
-      <h3>Recevez votre dossier</h3>
-      <p>Gratuit et sans engagement.</p>
+      <h3>Recevoir le dossier complet</h3>
+      <p>Recevez la brochure complète avec les prix et les plans</p>
       <div className="form-grid">
         <label>
           Prénom *
-          <input name="prenom" autoComplete="given-name" required placeholder="Votre prénom" />
+          <input name="prenom" autoComplete="given-name" required placeholder="Votre prénom" onChange={handleChange} />
         </label>
         <label>
           Nom *
-          <input name="nom" autoComplete="family-name" required placeholder="Votre nom" />
+          <input name="nom" autoComplete="family-name" required placeholder="Votre nom" onChange={handleChange} />
         </label>
       </div>
       <label>
         E-mail *
-        <input name="email" type="email" autoComplete="email" required placeholder="vous@exemple.fr" />
+        <input name="email" type="email" autoComplete="email" required placeholder="vous@exemple.fr" onChange={handleChange} />
       </label>
       <label>
         Téléphone *
@@ -70,12 +100,13 @@ export function LeadForm({
           required
           minLength={10}
           placeholder="06 00 00 00 00"
+          onChange={handleChange}
         />
       </label>
       <div className="form-grid">
         <label>
           Votre projet
-          <select name="projet" defaultValue="Habiter">
+          <select name="projet" defaultValue="Habiter" onChange={handleChange}>
             <option>Habiter</option>
             <option>Investir</option>
             <option>Je réfléchis encore</option>
@@ -87,7 +118,10 @@ export function LeadForm({
             name="typologie"
             id="typologie"
             value={typology}
-            onChange={(event) => selectTypology(event.target.value)}
+            onChange={(event) => {
+              selectTypology(event.target.value);
+              handleChange(event);
+            }}
           >
             <option value="">À définir</option>
             {typologies.map((option) => (
@@ -99,13 +133,13 @@ export function LeadForm({
         </label>
       </div>
       <label className="consent">
-        <input type="checkbox" required name="consent" defaultChecked />
+        <input type="checkbox" required name="consent" defaultChecked onChange={handleChange} />
         <span>
-          J’accepte d’être contacté(e) par Sélection Neuf au sujet de ma demande
+          J'accepte d'être contacté(e) par Sélection Neuf au sujet de ma demande
         </span>
       </label>
       <button className="button" type="submit" disabled={pending}>
-        {pending ? "Envoi en cours…" : (<>Recevoir la plaquette et les plans <span>↗</span></>)}
+        {pending ? "Envoi en cours…" : (<>Valider ma demande <span>↗</span></>)}
       </button>
       <p className="form-note">Vos données sont transmises à votre conseiller Sélection Neuf.</p>
       <p

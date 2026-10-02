@@ -4,6 +4,11 @@ import { useRef, useCallback, useEffect, useActionState } from "react";
 import { submitLead, type LeadState } from "@/app/actions";
 import { trackLeadConversion } from "@/lib/gtag";
 import { persistLandingUtm, UTM_KEYS } from "@/lib/utm";
+import {
+  getOrCreateSessionId,
+  trackVisitorField,
+  flushVisitorTracking,
+} from "@/lib/visitor-tracking";
 
 const initialState: LeadState = null;
 
@@ -17,7 +22,12 @@ export function BrochureModal({
   source?: string;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const sessionIdRef = useRef("");
   const [state, formAction, pending] = useActionState(submitLead, initialState);
+
+  useEffect(() => {
+    sessionIdRef.current = getOrCreateSessionId();
+  }, []);
 
   useEffect(() => {
     const el = dialogRef.current;
@@ -35,6 +45,16 @@ export function BrochureModal({
       if (e.target === dialogRef.current) onClose();
     },
     [onClose],
+  );
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, type } = e.target;
+      const value =
+        type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value;
+      trackVisitorField(sessionIdRef.current, name, value);
+    },
+    [],
   );
 
   return (
@@ -66,6 +86,7 @@ export function BrochureModal({
         <form
           className="brochure-modal-form"
           action={(formData) => {
+            flushVisitorTracking();
             const utm = persistLandingUtm();
             for (const key of UTM_KEYS) {
               const value = utm[key];
@@ -79,29 +100,29 @@ export function BrochureModal({
           <div className="bm-grid">
             <label>
               Nom&nbsp;*
-              <input name="nom" autoComplete="family-name" required placeholder="Votre nom" />
+              <input name="nom" autoComplete="family-name" required placeholder="Votre nom" onChange={handleChange} />
             </label>
             <label>
               Prénom&nbsp;*
-              <input name="prenom" autoComplete="given-name" required placeholder="Votre prénom" />
+              <input name="prenom" autoComplete="given-name" required placeholder="Votre prénom" onChange={handleChange} />
             </label>
           </div>
 
           <div className="bm-grid">
             <label>
               E-mail&nbsp;*
-              <input name="email" type="email" autoComplete="email" required placeholder="vous@exemple.fr" />
+              <input name="email" type="email" autoComplete="email" required placeholder="vous@exemple.fr" onChange={handleChange} />
             </label>
             <label>
               Numéro de téléphone
-              <input name="telephone" type="tel" autoComplete="tel" required minLength={10} placeholder="06 12 34 56 78" />
+              <input name="telephone" type="tel" autoComplete="tel" required minLength={10} placeholder="06 12 34 56 78" onChange={handleChange} />
             </label>
           </div>
 
           <div className="bm-grid">
             <label>
               Votre projet
-              <select name="projet" defaultValue="Habiter">
+              <select name="projet" defaultValue="Habiter" onChange={handleChange}>
                 <option>Habiter</option>
                 <option>Investir</option>
                 <option>Je réfléchis encore</option>
@@ -109,7 +130,7 @@ export function BrochureModal({
             </label>
             <label>
               Votre appartement
-              <select name="typologie">
+              <select name="typologie" onChange={handleChange}>
                 <option value="">À définir</option>
                 <option value="T2">T2 — 2 pièces</option>
                 <option value="T3">T3 — 3 pièces</option>
@@ -119,7 +140,7 @@ export function BrochureModal({
           </div>
 
           <label className="consent">
-            <input type="checkbox" required name="consent" defaultChecked />
+            <input type="checkbox" required name="consent" defaultChecked onChange={handleChange} />
             <span>
               J'accepte d'être contacté(e) par Sélection Neuf au sujet de ma demande
             </span>
