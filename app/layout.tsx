@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Frank_Ruhl_Libre, Source_Sans_3 } from "next/font/google";
+import { BrochureModalProvider } from "@/components/BrochureModalProvider";
 import { GoogleTag } from "@/components/GoogleTag";
 import { Header } from "@/components/Header";
 import { UtmCapture } from "@/components/UtmCapture";
@@ -92,11 +93,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <GoogleTag />
         <UtmCapture />
-        <a className="skip-link" href="#contenu">
-          Aller au contenu
-        </a>
-        <Header />
-        {children}
+        <BrochureModalProvider>
+          <a className="skip-link" href="#contenu">
+            Aller au contenu
+          </a>
+          <Header />
+          {children}
+        </BrochureModalProvider>
       </body>
     </html>
   );

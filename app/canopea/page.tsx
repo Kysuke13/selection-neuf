@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Contact } from "@/components/Contact";
 import { LeadForm } from "@/components/LeadForm";
 import { MobileCta } from "@/components/MobileCta";
+import { ModalCta } from "@/components/ModalCta";
 import { PlanLink } from "@/components/PlanLink";
 import { TypologyProvider } from "@/components/TypologyProvider";
 import {
@@ -163,9 +164,9 @@ export default function CanopeaPage() {
                 </span>
               ))}
             </div>
-            <a className="text-link" href="#contact">
+            <ModalCta className="text-link">
               Découvrir la résidence en détail <span>↗</span>
-            </a>
+            </ModalCta>
           </div>
         </section>
 
@@ -313,7 +314,7 @@ export default function CanopeaPage() {
                 sélection neuf.
               </a>
               <span>L’immobilier neuf, bien choisi.</span>
-              <a href="#contact">Parlons de votre projet ↗</a>
+              <ModalCta>Parlons de votre projet ↗</ModalCta>
             </div>
             <div className="legal">
               <p>

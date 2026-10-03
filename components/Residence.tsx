@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ModalCta } from "@/components/ModalCta";
 import { featureMarks, features } from "@/lib/site";
 
 export function Residence() {
@@ -38,9 +39,9 @@ export function Residence() {
             </span>
           ))}
         </div>
-        <a className="text-link" href="#contact">
+        <ModalCta className="text-link">
           Découvrir la résidence en détail <span>↗</span>
-        </a>
+        </ModalCta>
       </div>
     </section>
   );

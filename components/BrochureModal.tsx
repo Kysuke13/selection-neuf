@@ -12,17 +12,28 @@ import {
 
 const initialState: LeadState = null;
 
+const defaultTypologies = [
+  { value: "T2", label: "T2 — 2 pièces" },
+  { value: "T3", label: "T3 — 3 pièces" },
+  { value: "T4", label: "T4 — 4 pièces" },
+];
+
 export function BrochureModal({
   open,
   onClose,
   source = "duo-verde-montpellier",
+  typologies = defaultTypologies,
+  initialTypology = "",
 }: {
   open: boolean;
   onClose: () => void;
   source?: string;
+  typologies?: readonly { value: string; label: string }[];
+  initialTypology?: string;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const sessionIdRef = useRef("");
+  const typologyRef = useRef<HTMLSelectElement>(null);
   const [state, formAction, pending] = useActionState(submitLead, initialState);
 
   useEffect(() => {
@@ -32,9 +43,13 @@ export function BrochureModal({
   useEffect(() => {
     const el = dialogRef.current;
     if (!el) return;
-    if (open && !el.open) el.showModal();
-    else if (!open && el.open) el.close();
-  }, [open]);
+    if (open && !el.open) {
+      if (typologyRef.current) typologyRef.current.value = initialTypology;
+      el.showModal();
+    } else if (!open && el.open) {
+      el.close();
+    }
+  }, [open, initialTypology]);
 
   useEffect(() => {
     if (state?.ok) trackLeadConversion();
@@ -130,11 +145,13 @@ export function BrochureModal({
             </label>
             <label>
               Votre appartement
-              <select name="typologie" onChange={handleChange}>
+              <select name="typologie" ref={typologyRef} onChange={handleChange}>
                 <option value="">À définir</option>
-                <option value="T2">T2 — 2 pièces</option>
-                <option value="T3">T3 — 3 pièces</option>
-                <option value="T4">T4 — 4 pièces</option>
+                {typologies.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
             </label>
           </div>

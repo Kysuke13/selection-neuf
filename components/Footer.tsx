@@ -1,3 +1,5 @@
+import { ModalCta } from "@/components/ModalCta";
+
 export function Footer() {
   return (
     <footer>
@@ -6,7 +8,7 @@ export function Footer() {
           sélection neuf.
         </a>
         <span>L’immobilier neuf, bien choisi.</span>
-        <a href="#contact">Parlons de votre projet ↗</a>
+        <ModalCta>Parlons de votre projet ↗</ModalCta>
       </div>
       <div className="legal">
         <p>

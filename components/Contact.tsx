@@ -1,3 +1,5 @@
+import { ModalCta } from "@/components/ModalCta";
+
 function dossierDe(program: string) {
   return /^[aeiouyàâäéèêëîïôöùûüh]/i.test(program) ? `d’${program}` : `de ${program}`;
 }
@@ -43,9 +45,9 @@ export function Contact({
       <div className="contact-card">
         <h3>Recevoir le dossier complet</h3>
         <p>Recevez la brochure complète avec les prix et les plans</p>
-        <a className="button" href="#contact">
+        <ModalCta className="button">
           {cta} <span>↗</span>
-        </a>
+        </ModalCta>
       </div>
     </section>
   );

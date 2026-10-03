@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useBrochureModal } from "@/components/BrochureModalProvider";
 import { entryApartment } from "@/lib/site";
 
 export function MobileCta({ priceLabel = entryApartment.priceLabel }: { priceLabel?: string }) {
   const [visible, setVisible] = useState(false);
+  const { openModal } = useBrochureModal();
 
   useEffect(() => {
     const form = document.getElementById("contact");
@@ -36,9 +38,14 @@ export function MobileCta({ priceLabel = entryApartment.priceLabel }: { priceLab
       <span>
         Dès <strong>{priceLabel} €*</strong>
       </span>
-      <a className="button small" href="#contact" tabIndex={visible ? undefined : -1}>
+      <button
+        className="button small"
+        type="button"
+        tabIndex={visible ? undefined : -1}
+        onClick={() => openModal()}
+      >
         Recevoir les plans ↗
-      </a>
+      </button>
     </div>
   );
 }
