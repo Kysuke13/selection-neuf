@@ -12,7 +12,7 @@ const documents = [
 export function Contact({
   program = "Duo Verde",
   items = documents,
-  cta = "Valider ma demande",
+  cta = "Télécharger la brochure",
 }: {
   program?: string;
   items?: readonly string[];

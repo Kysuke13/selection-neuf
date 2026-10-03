@@ -24,6 +24,9 @@ header .brand{margin-left:calc(3.762vw - 5vw)}
 @media(max-width:760px){.brand-logo{height:54px}header .brand{margin-left:0}}
 @media(max-width:480px){.brand-logo{height:46px}}
 @media(max-width:400px){.brand-logo{height:38px}}
+
+/* Sticky header desktop only */
+@media(min-width:761px){header{position:sticky;top:0;z-index:10;backdrop-filter:blur(12px);background:rgba(255,250,242,.92)}}
 .address{display:flex;align-items:center;gap:7px}
 .address svg{width:20px;height:20px;flex:none;color:#6d9a86}
 
