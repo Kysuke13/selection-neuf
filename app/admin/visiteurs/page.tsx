@@ -41,6 +41,24 @@ function filledFieldsCount(v: Visiteur): number {
   return fields.filter(Boolean).length;
 }
 
+function formatDuration(seconds: number | null | undefined): string {
+  if (seconds == null || seconds <= 0) return "—";
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  if (h > 0) return `${h} h ${String(m).padStart(2, "0")} min`;
+  if (m > 0) return `${m} min ${String(s).padStart(2, "0")} s`;
+  return `${s} s`;
+}
+
+function averageDuration(rows: Visiteur[]): number | null {
+  const values = rows
+    .map((v) => v.duree_secondes)
+    .filter((n): n is number => typeof n === "number" && n > 0);
+  if (values.length === 0) return null;
+  return Math.round(values.reduce((sum, n) => sum + n, 0) / values.length);
+}
+
 export default async function VisiteursPage({
   searchParams,
 }: {
@@ -94,6 +112,7 @@ export default async function VisiteursPage({
     (v) => now - new Date(v.created_at).getTime() < 7 * 24 * 3600 * 1000
   ).length;
   const withEmail = allVisiteurs.filter((v) => v.email).length;
+  const avgDuration = averageDuration(activeSource ? visiteurs : allVisiteurs);
 
   return (
     <div className="admin-root">
@@ -103,7 +122,8 @@ export default async function VisiteursPage({
           <h1>Visiteurs</h1>
           <p>
             Sessions enregistrées sur les formulaires du site (saisies
-            partielles et complètes).
+            partielles et complètes), avec le temps passé sur la page tant
+            que l&apos;onglet reste visible.
           </p>
         </div>
 
@@ -123,6 +143,10 @@ export default async function VisiteursPage({
           <div className="admin-stat">
             <div className="value">{withEmail}</div>
             <div className="label">Avec email</div>
+          </div>
+          <div className="admin-stat">
+            <div className="value compact">{formatDuration(avgDuration)}</div>
+            <div className="label">Temps moyen</div>
           </div>
         </div>
 
@@ -169,6 +193,7 @@ export default async function VisiteursPage({
               <thead>
                 <tr>
                   <th>Dernière activité</th>
+                  <th>Temps passé</th>
                   <th>Programme</th>
                   <th>Prénom</th>
                   <th>Nom</th>
@@ -233,6 +258,7 @@ function VisiteurRow({ visiteur: v }: { visiteur: Visiteur }) {
   return (
     <tr>
       <td className="nowrap muted">{formatDate(v.updated_at)}</td>
+      <td className="nowrap">{formatDuration(v.duree_secondes)}</td>
       <td>
         {v.source ? (
           <span className="badge">

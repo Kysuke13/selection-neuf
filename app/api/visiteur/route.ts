@@ -22,6 +22,19 @@ function sanitize(value: unknown): string | null {
   return cleaned || null;
 }
 
+const MAX_DURATION_SECONDS = 24 * 60 * 60;
+
+function sanitizeDuration(value: unknown): number | null {
+  const n = typeof value === "number" ? value : typeof value === "string" ? Number(value) : NaN;
+  if (!Number.isFinite(n)) return null;
+  return Math.min(MAX_DURATION_SECONDS, Math.max(0, Math.floor(n)));
+}
+
+function isMissingDurationColumn(error: { code?: string; message?: string }): boolean {
+  if (!/duree_secondes/.test(error.message ?? "")) return false;
+  return error.code === "PGRST204" || error.code === "42703";
+}
+
 function getClientIp(request: NextRequest): string | null {
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0].trim();
@@ -94,19 +107,46 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const { data: existing } = await supabase
+  const duration = sanitizeDuration(body.duree_secondes);
+
+  let durationSupported = true;
+  const lookup = await supabase
     .from("visiteurs")
-    .select("id, geo_country")
+    .select("id, geo_country, duree_secondes")
     .eq("session_id", sessionId)
     .maybeSingle();
 
+  let existing = lookup.data;
+  if (lookup.error && isMissingDurationColumn(lookup.error)) {
+    durationSupported = false;
+    const fallback = await supabase
+      .from("visiteurs")
+      .select("id, geo_country")
+      .eq("session_id", sessionId)
+      .maybeSingle();
+    if (fallback.error) {
+      console.error("Erreur lecture visiteur:", fallback.error);
+      return NextResponse.json({ error: "read_failed" }, { status: 500 });
+    }
+    existing = fallback.data;
+  } else if (lookup.error) {
+    console.error("Erreur lecture visiteur:", lookup.error);
+    return NextResponse.json({ error: "read_failed" }, { status: 500 });
+  }
+
   if (existing) {
+    const previousDuration =
+      typeof existing.duree_secondes === "number" ? existing.duree_secondes : 0;
     const update: Record<string, unknown> = {
       ...fields,
       ip,
       user_agent: userAgent,
       updated_at: new Date().toISOString(),
     };
+
+    if (durationSupported && duration !== null) {
+      update.duree_secondes = Math.max(previousDuration, duration);
+    }
 
     if (!existing.geo_country && ip) {
       const geo = await geolocateIp(ip);
@@ -129,6 +169,7 @@ export async function POST(request: NextRequest) {
       session_id: sessionId,
       ip,
       user_agent: userAgent,
+      ...(durationSupported ? { duree_secondes: duration ?? 0 } : {}),
       ...fields,
       ...(geo ?? {}),
     });

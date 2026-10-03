@@ -9,6 +9,7 @@ import {
   getOrCreateSessionId,
   trackVisitorField,
   flushVisitorTracking,
+  startPageDwellTracking,
 } from "@/lib/visitor-tracking";
 
 const initialState: LeadState = null;
@@ -34,6 +35,7 @@ export function LeadForm({
 
   useEffect(() => {
     sessionIdRef.current = getOrCreateSessionId();
+    startPageDwellTracking(sessionIdRef.current);
     const utm = persistLandingUtm();
     const meta: Record<string, string | null> = {
       source,

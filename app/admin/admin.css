@@ -148,6 +148,10 @@
   line-height: 1;
 }
 
+.admin-stat .value.compact {
+  font-size: 1.35rem;
+}
+
 .admin-stat .label {
   margin-top: 0.4rem;
   color: var(--admin-muted);

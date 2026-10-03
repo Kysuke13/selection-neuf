@@ -8,6 +8,7 @@ import {
   getOrCreateSessionId,
   trackVisitorField,
   flushVisitorTracking,
+  startPageDwellTracking,
 } from "@/lib/visitor-tracking";
 
 const initialState: LeadState = null;
@@ -39,6 +40,13 @@ export function BrochureModal({
   useEffect(() => {
     sessionIdRef.current = getOrCreateSessionId();
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const sessionId = sessionIdRef.current || getOrCreateSessionId();
+    sessionIdRef.current = sessionId;
+    startPageDwellTracking(sessionId);
+  }, [open]);
 
   useEffect(() => {
     const el = dialogRef.current;

@@ -138,6 +138,7 @@ export type Visiteur = {
   geo_city: string | null;
   geo_lat: number | null;
   geo_lon: number | null;
+  duree_secondes: number | null;
 };
 
 export type FetchVisiteursResult =
