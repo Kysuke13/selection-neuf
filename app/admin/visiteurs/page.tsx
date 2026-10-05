@@ -9,6 +9,7 @@ import {
 } from "@/lib/admin";
 import { logoutAction } from "../actions";
 import { RefreshButton } from "../RefreshButton";
+import { VisiteursTable, type VisiteurTableRow } from "./VisiteursTable";
 import "../admin.css";
 
 export const dynamic = "force-dynamic";
@@ -42,13 +43,18 @@ function filledFieldsCount(v: Visiteur): number {
 }
 
 function formatDuration(seconds: number | null | undefined): string {
-  if (seconds == null || seconds <= 0) return "—";
+  if (seconds == null || seconds <= 0) return "";
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = seconds % 60;
   if (h > 0) return `${h} h ${String(m).padStart(2, "0")} min`;
   if (m > 0) return `${m} min ${String(s).padStart(2, "0")} s`;
   return `${s} s`;
+}
+
+function formatSeconds(seconds: number | null | undefined): string {
+  if (seconds == null) return "—";
+  return `${seconds.toLocaleString("fr-FR")} s`;
 }
 
 function averageDuration(rows: Visiteur[]): number | null {
@@ -145,7 +151,7 @@ export default async function VisiteursPage({
             <div className="label">Avec email</div>
           </div>
           <div className="admin-stat">
-            <div className="value compact">{formatDuration(avgDuration)}</div>
+            <div className="value compact">{formatDuration(avgDuration) || "—"}</div>
             <div className="label">Temps moyen</div>
           </div>
         </div>
@@ -171,52 +177,7 @@ export default async function VisiteursPage({
           ))}
         </div>
 
-        <div className="admin-toolbar">
-          <div className="muted">
-            {visiteurs.length} résultat{visiteurs.length > 1 ? "s" : ""}
-            {activeSource
-              ? ` · ${programmeLabel(activeSource).label}`
-              : ""}
-          </div>
-          <div className="admin-toolbar-actions">
-            <RefreshButton />
-          </div>
-        </div>
-
-        {visiteurs.length === 0 ? (
-          <div className="admin-table-wrap">
-            <div className="admin-empty">Aucun visiteur pour le moment.</div>
-          </div>
-        ) : (
-          <div className="admin-table-wrap">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Dernière activité</th>
-                  <th>Temps passé</th>
-                  <th>Programme</th>
-                  <th>Prénom</th>
-                  <th>Nom</th>
-                  <th>Email</th>
-                  <th>Téléphone</th>
-                  <th>Projet</th>
-                  <th>Typologie</th>
-                  <th>Localisation</th>
-                  <th>IP</th>
-                  <th>Champs remplis</th>
-                  <th>Appareil</th>
-                  <th>Origine</th>
-                  <th>Campagne</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visiteurs.map((v) => (
-                  <VisiteurRow key={v.id} visiteur={v} />
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <VisiteursTable rows={visiteurs.map((v) => toTableRow(v))} />
       </main>
     </div>
   );
@@ -251,81 +212,31 @@ function Topbar() {
   );
 }
 
-function VisiteurRow({ visiteur: v }: { visiteur: Visiteur }) {
+function toTableRow(v: Visiteur): VisiteurTableRow {
   const prog = programmeLabel(v.source);
   const filled = filledFieldsCount(v);
   const total = 6;
-  return (
-    <tr>
-      <td className="nowrap muted">{formatDate(v.updated_at)}</td>
-      <td className="nowrap">{formatDuration(v.duree_secondes)}</td>
-      <td>
-        {v.source ? (
-          <span className="badge">
-            {prog.label}
-            {prog.ville ? <span className="ville">{prog.ville}</span> : null}
-          </span>
-        ) : (
-          <span className="muted">—</span>
-        )}
-      </td>
-      <td className="lead-name">{v.prenom ?? <span className="muted">—</span>}</td>
-      <td className="lead-name">{v.nom ?? <span className="muted">—</span>}</td>
-      <td>
-        {v.email ? (
-          <a href={`mailto:${v.email}`}>{v.email}</a>
-        ) : (
-          <span className="muted">—</span>
-        )}
-      </td>
-      <td className="nowrap">
-        {v.telephone ? (
-          <a href={`tel:${v.telephone.replace(/\s+/g, "")}`}>{v.telephone}</a>
-        ) : (
-          <span className="muted">—</span>
-        )}
-      </td>
-      <td>
-        {v.projet ? (
-          <span className="chip">{v.projet}</span>
-        ) : (
-          <span className="muted">—</span>
-        )}
-      </td>
-      <td>
-        {v.typologie ? (
-          <span className="chip">{v.typologie}</span>
-        ) : (
-          <span className="muted">—</span>
-        )}
-      </td>
-      <td className="nowrap">
-        {v.geo_city || v.geo_region || v.geo_country ? (
-          <span className="geo-loc">
-            {[v.geo_city, v.geo_region].filter(Boolean).join(", ")}
-            {v.geo_country ? (
-              <span className="geo-country">{v.geo_country}</span>
-            ) : null}
-          </span>
-        ) : (
-          <span className="muted">—</span>
-        )}
-      </td>
-      <td className="nowrap muted">{v.ip ?? "—"}</td>
-      <td>
-        <span className={`chip ${filled === total ? "chip-complete" : filled > 0 ? "chip-partial" : ""}`}>
-          {filled}/{total}
-        </span>
-      </td>
-      <td>{parseUA(v.user_agent)}</td>
-      <td>
-        {v.utm_source ? (
-          <span className="chip">{v.utm_source}</span>
-        ) : (
-          <span className="muted">—</span>
-        )}
-      </td>
-      <td className="nowrap">{v.utm_campaign ?? <span className="muted">—</span>}</td>
-    </tr>
-  );
+  return {
+    id: v.id,
+    updatedAt: formatDate(v.updated_at),
+    seconds: v.duree_secondes,
+    secondsLabel: formatSeconds(v.duree_secondes),
+    durationLabel: formatDuration(v.duree_secondes),
+    programme: v.source ? prog.label : "—",
+    ville: prog.ville,
+    prenom: v.prenom ?? "",
+    nom: v.nom ?? "",
+    email: v.email ?? "",
+    telephone: v.telephone ?? "",
+    projet: v.projet ?? "",
+    typologie: v.typologie ?? "",
+    localisation: [v.geo_city, v.geo_region].filter(Boolean).join(", "),
+    country: v.geo_country ?? "",
+    ip: v.ip ?? "",
+    filled: `${filled}/${total}`,
+    filledState: filled === total ? "complete" : filled > 0 ? "partial" : "empty",
+    appareil: parseUA(v.user_agent),
+    origine: v.utm_source ?? "",
+    campagne: v.utm_campaign ?? "",
+  };
 }

@@ -306,6 +306,27 @@ table.admin-table {
   white-space: nowrap;
 }
 
+.admin-table thead th.admin-col-handle {
+  user-select: none;
+}
+
+.admin-col-grip {
+  cursor: grab;
+}
+
+.admin-col-grip:active {
+  cursor: grabbing;
+}
+
+.admin-table thead th.admin-col-handle[data-dragging="true"] {
+  opacity: 0.4;
+}
+
+.admin-table thead th[data-drop="true"] {
+  background: var(--admin-accent-soft);
+  box-shadow: inset 3px 0 0 var(--admin-accent);
+}
+
 .admin-table tbody td {
   padding: 0.85rem 1rem;
   border-bottom: 1px solid var(--admin-line);
@@ -491,4 +512,90 @@ table.admin-table {
   background: #f0f2f1;
   border-radius: 4px;
   padding: 0.05rem 0.35rem;
+}
+
+.admin-delete {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.95rem;
+  border-radius: 8px;
+  border: 1px solid #e7b4b4;
+  background: #fff;
+  color: #a12626;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-delete:hover:not(:disabled) {
+  background: #fdecec;
+}
+
+.admin-delete:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.admin-table-error {
+  margin-bottom: 0.75rem;
+}
+
+.admin-check-col {
+  width: 2.4rem;
+  text-align: center;
+}
+
+.admin-check-col input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--admin-accent);
+  cursor: pointer;
+}
+
+.admin-table thead tr.admin-filter-row th {
+  padding: 0 0.55rem 0.35rem;
+  background: #fafbfa;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.admin-root input.admin-col-filter {
+  width: 100%;
+  min-width: 5.5rem;
+  height: 1.7rem;
+  min-height: 0;
+  padding: 0 0.45rem;
+  border: 1px solid var(--admin-line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--admin-ink);
+  font: inherit;
+  font-size: 0.75rem;
+  line-height: 1.7rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.admin-root input.admin-col-filter:focus {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 1px;
+  border-color: var(--admin-accent);
+}
+
+.admin-table tbody tr[data-selected="true"] {
+  background: var(--admin-accent-soft);
+}
+
+.duration-seconds {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.duration-hint {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--admin-muted);
+  font-size: 0.75rem;
+  font-weight: 400;
 }
