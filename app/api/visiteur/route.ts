@@ -116,7 +116,11 @@ export async function POST(request: NextRequest) {
     .eq("session_id", sessionId)
     .maybeSingle();
 
-  let existing = lookup.data;
+  let existing: {
+    id: string;
+    geo_country: string | null;
+    duree_secondes?: number | null;
+  } | null = lookup.data;
   if (lookup.error && isMissingDurationColumn(lookup.error)) {
     durationSupported = false;
     const fallback = await supabase
